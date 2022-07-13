@@ -1,0 +1,56 @@
+﻿@page "/formdata"
+@using FormDemo.Shared
+@using FormDemo
+
+<h3>Users</h3>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (_users == null)
+{
+    <p><em>Null</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ad</th>
+                <th>soyad</th>
+                <th>email</th>
+                <th>password</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @if(_users is not null)
+            {
+                @foreach (var users in _users)
+                {
+                    <tr>
+                        <td>@users.Ad</td>
+                        <td>@users.Soyad</td>
+                        <td>@users.Email</td>
+                        <td>@users.Password</td>
+                    
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    HttpClient client = new HttpClient();
+    private List<User> _users;
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("https://localhost:7096/api/Users");
+        if(response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            _users = await response.Content.ReadFromJsonAsync<List<User>>();
+        }
+        await base.OnInitializedAsync();
+    }
+
+}
