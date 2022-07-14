@@ -1,0 +1,56 @@
+﻿@page "/formdata"
+@using FormDemo.Shared
+@using FormDemo
+
+<h3>Users</h3>
+<p>This component shows user datas.</p>
+<style>
+    th, td {
+        border: 1px solid black;
+    }
+
+    .hide{
+        -webkit-text-security: circle;
+    }
+</style>
+@if (_users == null)
+{
+    <p><em>Null</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Email</th>
+                <th>Password</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @if (_users is not null)
+            {
+                @foreach (var users in _users)
+                {
+                    <tr>
+                        <td>@users.Name</td>
+                        <td>@users.Surname</td>
+                        <td>@users.Email</td>
+                        <td class="hide">@users.Password</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+
+    HttpClient client = new HttpClient();
+    [Parameter]
+    public List<User> _users { get; set; }
+
+}

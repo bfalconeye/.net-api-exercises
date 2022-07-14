@@ -1,0 +1,72 @@
+﻿@page "/formindex"
+@using FormDemo.Shared
+@using FormDemo.Client.Pages
+@using System.Text;
+@using System.Text.Json;
+@inject NavigationManager Navigate
+<h3>Form</h3>
+<EditForm Model="user1">
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" @bind-value="user1.Name" class="form-control" id="exampleInputName" aria-describedby="nameHelp" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+        <label>Surname</label>
+        <input type="text" @bind-value="user1.Surname" class="form-control" id="exampleInputSurname" aria-describedby="surnameHelp" placeholder="Enter surname">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email</label>
+        <input type="email" @bind-value="user1.Email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" @bind-value="user1.Password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
+    </div>
+    <br /> <br />
+    <button type="submit" @onclick="AddUser" class="btn btn-primary">Submit</button>
+</EditForm>
+<br />
+<br />
+<FormData _users="userList"></FormData>
+@code {
+    User user1 = new User();
+    HttpClient client = new HttpClient();
+    private List<User> userList;
+    public async void AddUser()
+    {
+        var json = JsonSerializer.Serialize(user1);
+        var data = new StringContent(json, Encoding.UTF8, "application/json");
+        var url = "https://localhost:7096/api/Users";
+        using var client = new HttpClient();
+        var response = await client.PostAsync(url, data);
+        string result = response.Content.ReadAsStringAsync().Result;
+        if (userList == null)
+        {
+            Console.WriteLine("--");
+        }
+        else
+        {
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                userList = await response.Content.ReadFromJsonAsync<List<User>>();
+            }
+            await base.OnInitializedAsync();
+        }
+        user1 = new User();
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await client.GetAsync("https://localhost:7096/api/Users");
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            userList = await response.Content.ReadFromJsonAsync<List<User>>();
+        }
+        await base.OnInitializedAsync();
+
+
+
+    }
+}
