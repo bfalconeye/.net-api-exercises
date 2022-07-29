@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FormDemoAPI;
 using FormDemo;
@@ -14,11 +14,11 @@ namespace FormDemoAPI.Controllers
         {
             new User
             {
-                Name="Beyza",
-                Surname="Sahingoz",
-                Email="beyzas@gmail.com",
-                Password="12321"
-
+                Name="Yaman",
+                Surname="Atahan",
+                Email="yatahan@gmail.com",
+                Password="12321",
+                Age="24"
             }
         };
         [HttpGet]
