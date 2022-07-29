@@ -1,0 +1,22 @@
+﻿@page "/chart"
+@inject IJSRuntime JS
+<h3>Data Chart</h3>
+<button class="btn btn-primary" @onclick="ChartDatas">Click me</button>
+<div id="chart">
+</div>
+@code {
+     private SampleData data { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        data = new();
+        return base.OnInitializedAsync();
+    }
+
+    public async Task ChartDatas()
+    {
+        var deneme = data.GetDatas();
+        var deneme2 = deneme.FirstOrDefault(x => x.id == 1);
+        await JS.InvokeVoidAsync("Datas", deneme2.Values.ToArray(), deneme2.Names.ToArray());
+    }
+}
